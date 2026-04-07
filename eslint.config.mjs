@@ -32,6 +32,11 @@ export default [
                 clearTimeout: "readonly",
                 setInterval: "readonly",
                 clearInterval: "readonly",
+                fetch: "readonly",
+                URLSearchParams: "readonly",
+                Response: "readonly",
+                Request: "readonly",
+                Headers: "readonly",
             },
         },
         plugins: {
