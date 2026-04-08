@@ -5,7 +5,6 @@ import { DEFAULT_DF, DEFAULT_MAX_RESULTS, DEFAULT_SAFE_SEARCH } from "./config.j
 import { formatResultsJson } from "./output/json.js";
 import { formatResultsMarkdown } from "./output/markdown.js";
 import { search } from "./search/api.js";
-import { runTui } from "./tui/app.js";
 import type { DfLevel, SafeSearchLevel, SearchConfig } from "./types.js";
 import { isValidDate } from "./utils/date.js";
 
@@ -16,7 +15,6 @@ interface CliOptions {
     time?: string[];
     safeSearch?: string;
     json?: boolean;
-    tui?: boolean;
 }
 
 const SAFE_SEARCH_LEVELS: SafeSearchLevel[] = ["off", "moderate", "strict"];
@@ -35,20 +33,12 @@ export function createCli(): Command {
         .option("--time <from> <to>", "Date range (YYYY-MM-DD)", (val: string, prev: string[]) => [...prev, val], [])
         .option("--safe-search <level>", "Safe search (off, moderate, strict)")
         .option("--json", "Output as JSON")
-        .option("--tui", "TUI mode")
         .action(handleCommand);
 
     return program;
 }
 
 async function handleCommand(query: string | undefined, options: CliOptions): Promise<void> {
-    const forceTui = options.tui || (!query && process.stdout.isTTY);
-
-    if (forceTui) {
-        await runTui(query);
-        return;
-    }
-
     if (!query) {
         const result = await text({
             message: "What would you like to search for?",
