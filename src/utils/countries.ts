@@ -73,11 +73,3 @@ export const COUNTRIES: Country[] = [
     { code: "vn-vi", label: "Vietnam" },
     { code: "wt-wt", label: "No region" },
 ];
-
-export function fuzzyMatchCountries(query: string, limit = 10): Country[] {
-    const lower = query.toLowerCase();
-    return COUNTRIES.filter((c) => c.code.toLowerCase().includes(lower) || c.label.toLowerCase().includes(lower)).slice(
-        0,
-        limit,
-    );
-}
