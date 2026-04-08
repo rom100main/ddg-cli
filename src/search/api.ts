@@ -19,10 +19,6 @@ async function fetchPage(config: SearchConfig, page: number): Promise<{ html: st
         params.set("df", DF_MAP[config.df]);
     }
 
-    if (config.timeFrom && config.timeTo) {
-        params.set("df", `d${config.timeFrom.replace(/-/g, "")}-${config.timeTo.replace(/-/g, "")}`);
-    }
-
     if (page > 0) {
         params.set("s", offset.toString());
         params.set("dc", (offset + 1).toString());

@@ -8,8 +8,6 @@ export interface SearchConfig {
     region: string | null;
     safeSearch: SafeSearchLevel;
     df: DfLevel | null;
-    timeFrom: string | null;
-    timeTo: string | null;
 }
 
 export interface SearchResult {

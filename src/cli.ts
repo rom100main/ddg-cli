@@ -1,4 +1,3 @@
-import { isCancel, text } from "@clack/prompts";
 import { Command } from "commander";
 
 import { DEFAULT_DF, DEFAULT_MAX_RESULTS, DEFAULT_SAFE_SEARCH } from "./config.js";
@@ -6,13 +5,11 @@ import { formatResultsJson } from "./output/json.js";
 import { formatResultsMarkdown } from "./output/markdown.js";
 import { search } from "./search/api.js";
 import type { DfLevel, SafeSearchLevel, SearchConfig } from "./types.js";
-import { isValidDate } from "./utils/date.js";
 
 interface CliOptions {
     maxResults?: string;
     region?: string;
     df?: string;
-    time?: string[];
     safeSearch?: string;
     json?: boolean;
 }
@@ -30,7 +27,6 @@ export function createCli(): Command {
         .option("--max-results <n>", "Maximum results to return")
         .option("--region <code>", "Region code (e.g., us-en)")
         .option("--df <level>", "Date filter (day, week, month, year)")
-        .option("--time <from> <to>", "Date range (YYYY-MM-DD)", (val: string, prev: string[]) => [...prev, val], [])
         .option("--safe-search <level>", "Safe search (off, moderate, strict)")
         .option("--json", "Output as JSON")
         .action(handleCommand);
@@ -40,20 +36,8 @@ export function createCli(): Command {
 
 async function handleCommand(query: string | undefined, options: CliOptions): Promise<void> {
     if (!query) {
-        const result = await text({
-            message: "What would you like to search for?",
-            placeholder: "Enter your search query...",
-            validate: (value) => {
-                if (!value || value.trim().length === 0) return "Query cannot be empty";
-                return undefined;
-            },
-        });
-
-        if (isCancel(result)) {
-            process.exit(0);
-        }
-
-        query = result.trim();
+        console.error("Error: Missing search query");
+        process.exit(1);
     }
 
     const config = await buildConfig(query, options);
@@ -99,25 +83,11 @@ async function buildConfig(query: string, options: CliOptions): Promise<SearchCo
         }
     }
 
-    let timeFrom: string | null = null;
-    let timeTo: string | null = null;
-    if (options.time && options.time.length >= 2) {
-        timeFrom = options.time[0];
-        timeTo = options.time[1];
-        if (!isValidDate(timeFrom) || !isValidDate(timeTo)) {
-            console.error("Invalid date format. Use YYYY-MM-DD. Ignoring time filter.");
-            timeFrom = null;
-            timeTo = null;
-        }
-    }
-
     return {
         query,
         maxResults,
         region,
         safeSearch,
         df,
-        timeFrom,
-        timeTo,
     };
 }
