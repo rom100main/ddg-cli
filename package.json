@@ -20,6 +20,7 @@
         "url": "git+https://github.com/rom100main/ddg-cli.git"
     },
     "license": "MIT",
+    "access": "public",
     "bin": {
         "ddg": "./dist/index.js"
     },
