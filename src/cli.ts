@@ -1,3 +1,6 @@
+import * as fs from "fs";
+import * as path from "path";
+
 import { Command } from "commander";
 
 import { DEFAULT_DF, DEFAULT_MAX_RESULTS, DEFAULT_SAFE_SEARCH } from "./config.js";
@@ -31,7 +34,61 @@ export function createCli(): Command {
         .option("--json", "Output as JSON")
         .action(handleCommand);
 
+    program
+        .command("skill")
+        .description("Install the ddg search skill for AI agents")
+        .option("--global", "Install globally in ~/.agents/skills/")
+        .action(installSkill);
+
     return program;
+}
+
+const SKILL_CONTENT = `---
+name: ddg-skill
+description: Search the web using DuckDuckGo. Use when the user asks to search for information, find websites, or look up topics online.
+---
+To search the web, run the following command:
+
+\`\`\`bash
+ddg "<query>"
+\`\`\`
+
+Replace \`<query>\` with the search terms.
+
+Optional flags:
+- \`--max-results <n>\` - Number of results (default: 5)
+- \`--region <code>\` - Region code (e.g., us-en)
+- \`--df <level>\` - Date filter (day, week, month, year)
+- \`--safe-search <level>\` - Safe search (off, moderate, strict)
+- \`--json\` - Output as JSON instead of Markdown
+
+Examples:
+\`\`\`bash
+ddg "typescript tutorial"
+ddg "react hooks" --max-results 10
+ddg "ai news" --df day --json
+\`\`\`
+`;
+
+interface SkillOptions {
+    global?: boolean;
+}
+
+async function installSkill(options: SkillOptions): Promise<void> {
+    const homeDir = process.env.HOME || process.env.USERPROFILE || "~";
+    const skillDir = options.global
+        ? path.join(homeDir, ".agents", "skills", "ddg-skill")
+        : path.join(process.cwd(), ".agents", "skills", "ddg-skill");
+    const skillFile = path.join(skillDir, "SKILL.md");
+
+    try {
+        fs.mkdirSync(skillDir, { recursive: true });
+        fs.writeFileSync(skillFile, SKILL_CONTENT);
+        console.log(`Skill installed at ${skillFile}`);
+    } catch (error) {
+        console.error("Error installing skill:", error);
+        process.exit(1);
+    }
 }
 
 async function handleCommand(query: string | undefined, options: CliOptions): Promise<void> {
