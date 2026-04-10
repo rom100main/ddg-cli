@@ -1,5 +1,5 @@
 {
-    "name": "ddg-cli",
+    "name": "@rom100main/ddg-cli",
     "version": "1.0.0",
     "description": "CLI tool for searching the web using DuckDuckGo, includes a skill for AI agents.",
     "author": "rom100main",
