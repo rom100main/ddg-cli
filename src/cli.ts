@@ -3,6 +3,9 @@ import * as path from "path";
 
 import { Command } from "commander";
 
+import packageJson from "../package.json" with { type: "json" };
+const { version } = packageJson;
+
 import { DEFAULT_DF, DEFAULT_MAX_RESULTS, DEFAULT_SAFE_SEARCH } from "./config.js";
 import { formatResultsJson } from "./output/json.js";
 import { formatResultsMarkdown } from "./output/markdown.js";
@@ -32,7 +35,8 @@ export function createCli(): Command {
         .option("--df <level>", "Date filter (day, week, month, year)")
         .option("--safe-search <level>", "Safe search (off, moderate, strict)")
         .option("--json", "Output as JSON")
-        .action(handleCommand);
+        .action(handleCommand)
+        .version(version);
 
     program
         .command("skill")
