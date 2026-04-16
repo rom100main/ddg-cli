@@ -1,7 +1,7 @@
 # DuckDuckGo CLI
 
 > [!NOTE] 
-> For a more up-to-date alternative with a TUI and no rate limits (using the Brave Search API instead of scraping), check out [brave-cli](https://github.com/rom100main/brave-cli) (@rom100main/brave-cli on npm).
+> For a more up-to-date alternative with a TUI and no rate limits (using the Brave Search API instead of scraping), check out [brave-cli](https://github.com/rom100main/brave-cli) ([@rom100main/brave-cli](https://www.npmjs.com/package/@rom100main/ddg-cli) on npm).
 
 A powerful CLI for searching the web using DuckDuckGo. Supports customizable result counts, region filtering, date filters, safe search levels, and multiple output formats. Includes a skill for AI agents.
 
